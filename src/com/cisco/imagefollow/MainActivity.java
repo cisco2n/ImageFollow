@@ -131,6 +131,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         });
         
         mBtn_right.setOnClickListener(onclicolisten);
+        mBtn_left.setOnClickListener(onclicolisten);
     }
 
     View.OnClickListener onclicolisten = new View.OnClickListener() {
