@@ -47,7 +47,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private ViewPager viewPager;
     private MyAdapter madapter;
     private int currrentItem = 0; //记录当前显示页面的位置
-    
+    private boolean mapstatus = false;
     private ScheduledExecutorService scheduledExecutorService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,10 +141,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
             switch(v.getId())
             {
                 case R.id.title_left:
-                    applyRotation(-1, 0, -90, mList,mapview,anim_content);
+                    
                     break;
                 case R.id.title_right:
+                	if(!mapstatus)
                     applyRotation(1, 0, 90, mapview ,mList,anim_content);
+                	else
+                	applyRotation(-1, 0, -90, mapview,mList,anim_content);
                     break;
                  default:
                         break;
@@ -309,12 +312,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
              
            if (mPosition > -1) {  
                //显示ImageView  
+        	   mapstatus = true;
                mSecond.setVisibility(View.GONE);  
                mFirst.setVisibility(View.VISIBLE);  
                mFirst.requestFocus();  
                rotation = new TranslationAnimation(-90, 0, centerX, centerY, 310.0f, false);  
            } else {  
                //返回listview  
+        	   mapstatus = false;
                mFirst.setVisibility(View.GONE);  
                mSecond.setVisibility(View.VISIBLE);  
                mSecond.requestFocus();  
