@@ -1,7 +1,6 @@
 
 package com.cisco.imagefollow;
 
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,10 +11,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,11 +29,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
     
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener {
 
     private ListView mList;
     private ListAdapter mAdapter;
     private View mView;
+    private FrameLayout anim_content;
+    private ImageView mapview;
+    private Button mBtn_right;
+    private Button mBtn_left;
+    
     private int[] imageIDs;
     private String[] titles;
     private ArrayList<ImageView> images;
@@ -51,6 +61,11 @@ public class MainActivity extends Activity {
     private void initMyMembers()
     {
         mAdapter = new ListAdapter(this);
+        anim_content = (FrameLayout)findViewById(R.id.anim_content);
+        mapview = (ImageView)findViewById(R.id.mapview);
+        mBtn_right = (Button)findViewById(R.id.title_right);
+        mBtn_left = (Button)findViewById(R.id.title_left);
+
         mList = (ListView)findViewById(R.id.listview);
         LayoutInflater mInflater = LayoutInflater.from(this);
         mView = mInflater.inflate(R.layout.list_viewpage,null);
@@ -114,8 +129,28 @@ public class MainActivity extends Activity {
             public void onPageScrollStateChanged(int position) {
             }
         });
+        
+        mBtn_right.setOnClickListener(onclicolisten);
     }
 
+    View.OnClickListener onclicolisten = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            switch(v.getId())
+            {
+                case R.id.title_left:
+                    applyRotation(-1, 0, -90, mList,mapview,anim_content);
+                    break;
+                case R.id.title_right:
+                    applyRotation(1, 0, 90, mapview ,mList,anim_content);
+                    break;
+                 default:
+                        break;
+            }
+        }
+    };
+    
     public class ListAdapter extends BaseAdapter{
         private LayoutInflater mInflater;
         
@@ -216,4 +251,86 @@ public class MainActivity extends Activity {
         
     };
     
+    private void applyRotation(int position, float start, float end, View first,View second,View content){  
+        // 计算中心点  
+        final float centerX = content.getWidth() / 2.0f;  
+        final float centerY = content.getHeight() / 2.0f;  
+    
+        final TranslationAnimation rotation =  
+                new TranslationAnimation(start, end, centerX, centerY, 310.0f, true);  
+        rotation.setDuration(500);  
+        rotation.setFillAfter(true);  
+        rotation.setInterpolator(new AccelerateInterpolator());  
+        //设置监听  
+        rotation.setAnimationListener(new DisplayNextView(position,first,second,content));  
+        content.startAnimation(rotation);  
+        } 
+       private final class DisplayNextView implements Animation.AnimationListener {  
+           private final int mPosition;  
+           private View mFirst;
+           private View mSecond;
+           private View mContent;
+           private DisplayNextView(int position,View first,View second,View content) {  
+               mPosition = position; 
+               mFirst = first;
+               mSecond = second;
+               mContent = content;
+           }  
+
+           public void onAnimationStart(Animation animation) {  
+               
+           }  
+           //动画结束  
+           public void onAnimationEnd(Animation animation) {  
+               mapview.post(new SwapViews(mPosition,mFirst,mSecond,mContent));  
+           }  
+
+           public void onAnimationRepeat(Animation animation) {  
+               
+           }  
+        }  
+       private final class SwapViews implements Runnable {  
+       private final int mPosition;  
+       private View mFirst;
+       private View mSecond;
+       private View mContent;
+       public SwapViews(int position,View first,View second,View content) {  
+           mPosition = position;  
+           mFirst = first;
+           mSecond = second;
+           mContent = content;
+       }  
+
+       public void run() {  
+           final float centerX = mContent.getWidth() / 2.0f;  
+           final float centerY = mContent.getHeight() / 2.0f;  
+           TranslationAnimation rotation;  
+             
+           if (mPosition > -1) {  
+               //显示ImageView  
+               mSecond.setVisibility(View.GONE);  
+               mFirst.setVisibility(View.VISIBLE);  
+               mFirst.requestFocus();  
+               rotation = new TranslationAnimation(-90, 0, centerX, centerY, 310.0f, false);  
+           } else {  
+               //返回listview  
+               mFirst.setVisibility(View.GONE);  
+               mSecond.setVisibility(View.VISIBLE);  
+               mSecond.requestFocus();  
+       
+               rotation = new TranslationAnimation(90, 0, centerX, centerY, 310.0f, false);  
+           }  
+       
+           rotation.setDuration(500);  
+           rotation.setFillAfter(true);  
+           rotation.setInterpolator(new DecelerateInterpolator());  
+           //开始动画  
+           mContent.startAnimation(rotation);  
+       } 
+  }
+    @Override
+    public void onClick(View v) {
+        // TODO Auto-generated method stub
+        
+    }
 }

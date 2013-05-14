@@ -7,7 +7,8 @@
     <Button 
         android:id="@+id/title_left"
         android:layout_width="wrap_content"
-        android:layout_height="35dip"
+        android:layout_height="30dip"
+        android:padding="5dip"
         android:minWidth="45dip"
         android:maxWidth="80dip"
         android:text="返回"
@@ -17,6 +18,8 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dip"
         android:textColor="#000000"
+        style="@style/text_white_shadow"
+        android:background= "@drawable/iphone_leftkey"
         />
     <TextView 
         android:id="@+id/title_txt"
@@ -29,11 +32,13 @@
 		android:textSize="18sp"
 		android:layout_centerInParent="true"
 		android:gravity="center"
+		style="@style/text_white_shadow"
         />
     <Button 
         android:id="@+id/title_right"
         android:layout_width="wrap_content"
-        android:layout_height="35dip"
+        android:layout_height="30dip"
+        android:padding="5dip"
         android:minWidth="45dip"
         android:maxWidth="80dip"
         android:text="地图模式"
@@ -43,5 +48,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="5dip"
         android:textColor="#000000"
+        style="@style/text_white_shadow"
+        android:background= "@drawable/iphone_leftkey"
         />
 </RelativeLayout>
