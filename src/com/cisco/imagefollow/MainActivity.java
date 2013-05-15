@@ -6,9 +6,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,12 +21,15 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -38,6 +44,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private ImageView mapview;
     private Button mBtn_right;
     private Button mBtn_left;
+    private final String LIST_ITEM_CLICK_INFO = "listitem";
     
     private int[] imageIDs;
     private String[] titles;
@@ -49,17 +56,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private int currrentItem = 0; //记录当前显示页面的位置
     private boolean mapstatus = false;
     private ScheduledExecutorService scheduledExecutorService;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initMyMembers();
+        initAllMembers();
         initMEvents();
     }
 
-    private void initMyMembers()
+    private void initAllMembers()
     {
+        ImageOperation.getImageFiles();
         mAdapter = new ListAdapter(this);
         anim_content = (FrameLayout)findViewById(R.id.anim_content);
         mapview = (ImageView)findViewById(R.id.mapview);
@@ -132,6 +141,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         
         mBtn_right.setOnClickListener(onclicolisten);
         mBtn_left.setOnClickListener(onclicolisten);
+        mList.setOnItemClickListener(listOnItemClick);
     }
 
     View.OnClickListener onclicolisten = new View.OnClickListener() {
@@ -147,7 +157,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 	if(!mapstatus)
                     applyRotation(1, 0, 90, mapview ,mList,anim_content);
                 	else
-                	applyRotation(-1, 0, -90, mapview,mList,anim_content);
+                	applyRotation(-1, 0, -90, mList ,mapview,anim_content);
                     break;
                  default:
                         break;
@@ -155,6 +165,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     };
     
+    AdapterView.OnItemClickListener listOnItemClick = new AdapterView.OnItemClickListener()
+    {
+        @Override
+        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+            // TODO Auto-generated method stub
+            Intent intent = new Intent();
+            intent.putExtra(LIST_ITEM_CLICK_INFO, arg2);
+            intent.setClass(MainActivity.this, ImageFollowActivity.class);
+            startActivity(intent);
+        }
+    };
     public class ListAdapter extends BaseAdapter{
         private LayoutInflater mInflater;
         
@@ -166,7 +187,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
-            return 10;
+            return ImageOperation.fileNameList.size();
         }
 
         @Override
@@ -192,10 +213,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 holder.itemImageviw = (ImageView) convertView.findViewById(R.id.item_image);
                 holder.itemTextView1 = (TextView) convertView.findViewById(R.id.item_txt1);
                 holder.itemTextView2 = (TextView) convertView.findViewById(R.id.item_txt2);
+                convertView.setTag(holder);
             }
             else{
                 holder = (ViewHolder)convertView.getTag();
             }
+            Log.e("getView", "position = " + "" + position);
+            String filename = ImageOperation.fileNameList.get(position).toString();
+            Log.e("getView", "filename = " + "" + filename);
+            Bitmap bm = ImageOperation.convertToBitmap(filename,55,55);
+            holder.itemImageviw.setImageBitmap(bm);
             return convertView;
         }
         
@@ -313,15 +340,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
            if (mPosition > -1) {  
                //显示ImageView  
         	   mapstatus = true;
-               mSecond.setVisibility(View.GONE);  
                mFirst.setVisibility(View.VISIBLE);  
+               mSecond.setVisibility(View.GONE);  
                mFirst.requestFocus();  
                rotation = new TranslationAnimation(-90, 0, centerX, centerY, 310.0f, false);  
            } else {  
                //返回listview  
         	   mapstatus = false;
-               mFirst.setVisibility(View.GONE);  
-               mSecond.setVisibility(View.VISIBLE);  
+               mFirst.setVisibility(View.VISIBLE);  
+               mSecond.setVisibility(View.GONE);  
                mSecond.requestFocus();  
        
                rotation = new TranslationAnimation(90, 0, centerX, centerY, 310.0f, false);  
