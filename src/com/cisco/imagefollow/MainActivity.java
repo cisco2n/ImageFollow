@@ -60,6 +60,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private boolean mapstatus = false;
     private ScheduledExecutorService scheduledExecutorService;
     private int  mViewPagerTotalNum = 0;
+    private int mListImageWidth = 0;
+    private int mListImageHeight = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -73,6 +75,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     {
         ImageOperation.getImageFiles();
         images = new ArrayList<ImageView>();
+        mListImageWidth = getResources().getDimensionPixelSize(R.dimen.listview_image_width);
+        mListImageHeight = getResources().getDimensionPixelSize(R.dimen.listview_image_height);
         mAdapter = new ListAdapter(this);
         anim_content = (FrameLayout)findViewById(R.id.anim_content);
         mapview = (ImageView)findViewById(R.id.mapview);
@@ -228,6 +232,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             String  filename = ImageOperation.fileNameList.get(position).toString();
             Bitmap bitmap = asyncLoader.loadBitmap(holder.itemImageviw,
                     filename,
+                    mListImageWidth ,
+                    mListImageHeight,
                     new ImageCallBack()  
                     {  
                         @Override  

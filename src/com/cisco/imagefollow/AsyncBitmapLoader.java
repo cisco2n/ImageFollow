@@ -29,7 +29,7 @@ public class AsyncBitmapLoader
         imageCache = new HashMap<String, SoftReference<Bitmap>>();  
     }  
       
-    public Bitmap loadBitmap(final ImageView imageView, final String imageURL, final ImageCallBack imageCallBack)  
+    public Bitmap loadBitmap(final ImageView imageView, final String imageURL,final int with,final int height, final ImageCallBack imageCallBack)  
     {  
         //在内存缓存中，则返回Bitmap对象  
         if(imageCache.containsKey(imageURL))  
@@ -91,7 +91,7 @@ public class AsyncBitmapLoader
                 // TODO Auto-generated method stub  
                 //InputStream bitmapIs = HttpUtils.getStreamFromURL(imageURL);  
                 //Bitmap bitmap = BitmapFactory.decodeStream(bitmapIs);  
-                Bitmap bitmap = ImageOperation.convertToBitmap(imageURL,55,55);
+                Bitmap bitmap = ImageOperation.convertToBitmap(imageURL,with,height);
                 imageCache.put(imageURL, new SoftReference<Bitmap>(bitmap));  
                 Message msg = handler.obtainMessage(0, bitmap);  
                 handler.sendMessage(msg);  
