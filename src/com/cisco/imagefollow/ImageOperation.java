@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class ImageOperation {
     public static ArrayList<File> fileNameList;
     public static int mTotalFilesNum =0;
-    public static String path="/sdcard/photo"; 
+    public static String path="/sdcard/Photos"; 
     public  static Bitmap convertToBitmap(String path, int w, int h) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         // 设置为ture只获取图片大小
