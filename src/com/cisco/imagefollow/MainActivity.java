@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -56,7 +57,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private int currrentItem = 0; //记录当前显示页面的位置
     private boolean mapstatus = false;
     private ScheduledExecutorService scheduledExecutorService;
-    
+    private int  mViewPagerTotalNum = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -69,6 +70,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void initAllMembers()
     {
         ImageOperation.getImageFiles();
+        images = new ArrayList<ImageView>();
         mAdapter = new ListAdapter(this);
         anim_content = (FrameLayout)findViewById(R.id.anim_content);
         mapview = (ImageView)findViewById(R.id.mapview);
@@ -79,14 +81,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         LayoutInflater mInflater = LayoutInflater.from(this);
         mView = mInflater.inflate(R.layout.list_viewpage,null);
         mView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.listview_header_height)));
-        
-        imageIDs = new int[] {
-                R.drawable.a,
-                R.drawable.b,
-                R.drawable.c,
-                R.drawable.d,
-                R.drawable.e
-                };
         titles = new String[]{
                 "这是第一张",
                 "这是第二张",
@@ -95,11 +89,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 "这是第五张",
         };
         //用来显示的图片
-        images = new ArrayList<ImageView>();
-        for(int i = 0; i < imageIDs.length; i++){
+        for(int i = 0; i < ImageOperation.fileNameList.size(); i++){
+            mViewPagerTotalNum = i;
             ImageView imageView = new ImageView(getApplicationContext());
-            imageView.setBackgroundResource(imageIDs[i]);
+            imageView.setBackgroundColor(Color.BLACK);
+            imageView.setImageBitmap(ImageOperation.convertToBitmap(ImageOperation.fileNameList.get(i).toString(), 200, 200));
             images.add(imageView);
+            if(i == 4)
+                break;
         }
         
         dots = new ArrayList<View>();
@@ -270,7 +267,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void run() {
-            currrentItem = (currrentItem + 1)%imageIDs.length;
+            currrentItem = (currrentItem + 1)%mViewPagerTotalNum;
             handler.sendEmptyMessage(0);
         }
     }
