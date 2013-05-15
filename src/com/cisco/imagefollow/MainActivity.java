@@ -1,6 +1,8 @@
 
 package com.cisco.imagefollow;
 
+import com.cisco.imagefollow.AsyncBitmapLoader.ImageCallBack;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -175,10 +177,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
     };
     public class ListAdapter extends BaseAdapter{
         private LayoutInflater mInflater;
-        
+        private AsyncBitmapLoader asyncLoader = null;
         public ListAdapter(Context context)
         {
             this.mInflater = LayoutInflater.from(context);
+            this.asyncLoader = new AsyncBitmapLoader();  
         }
         
         @Override
@@ -215,11 +218,33 @@ public class MainActivity extends Activity implements View.OnClickListener {
             else{
                 holder = (ViewHolder)convertView.getTag();
             }
+            /*
             Log.e("getView", "position = " + "" + position);
             String filename = ImageOperation.fileNameList.get(position).toString();
             Log.e("getView", "filename = " + "" + filename);
             Bitmap bm = ImageOperation.convertToBitmap(filename,55,55);
             holder.itemImageviw.setImageBitmap(bm);
+            */
+            String  filename = ImageOperation.fileNameList.get(position).toString();
+            Bitmap bitmap = asyncLoader.loadBitmap(holder.itemImageviw,
+                    filename,
+                    new ImageCallBack()  
+                    {  
+                        @Override  
+                        public void imageLoad(ImageView imageView, Bitmap bitmap)  
+                        {  
+                            // TODO Auto-generated method stub  
+                            holder.itemImageviw.setImageBitmap(bitmap);  
+                        }  
+                    });  
+            if(bitmap == null)  
+            {  
+                holder.itemImageviw.setImageResource(R.drawable.list_item_image_def);  
+            }  
+            else  
+            {  
+                holder.itemImageviw.setImageBitmap(bitmap);  
+            }  
             return convertView;
         }
         
