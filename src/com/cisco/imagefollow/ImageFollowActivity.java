@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -27,6 +28,7 @@ public class ImageFollowActivity extends Activity {
     private Button mStore;
     private MyAdapter mViewAdapter;
     private ArrayList<ImageView>images;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -73,6 +75,7 @@ public class ImageFollowActivity extends Activity {
             switch(v.getId())
             {
                 case R.id.btn_back:
+                    finish();
                     break;
                 case R.id.btn_message:
                     break;

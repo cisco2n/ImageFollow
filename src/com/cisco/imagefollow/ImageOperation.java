@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class ImageOperation {
     public static ArrayList<File> fileNameList;
+    public static int mTotalFilesNum =0;
     public static String path="/sdcard/photo"; 
     public  static Bitmap convertToBitmap(String path, int w, int h) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -36,15 +37,22 @@ public class ImageOperation {
     
 
   // 读取文件列表,并设置listview
+public static int getTotalFilesNum()
+  {
+      return mTotalFilesNum;
+  }
   public static void getImageFiles() { 
           File[] files = new File(path).listFiles();  
           fileNameList = new ArrayList<File>();
-          for (File file : files) {
-                  if (isValidFileOrDir(file)) {
-                          fileNameList.add(file);
-                  }
+          if(files != null)
+          {
+              for (File file : files) {
+                      if (isValidFileOrDir(file)) {
+                              fileNameList.add(file);
+                      }
+              }
+              mTotalFilesNum = fileNameList.size();
           }
-          Log.e("ImageOperation", "fileNameList =  " + "" +fileNameList.size());
   }
   
   /*检查是否为合法的文件名，或者是否为路径*/
