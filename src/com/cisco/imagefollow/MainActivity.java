@@ -56,7 +56,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private TextView title;
     private ViewPager viewPager;
     private MyAdapter madapter;
-    private int currrentItem = 0; //记录当前显示页面的位置
+    private int currrentItem = 0;
     private boolean mapstatus = false;
     private ScheduledExecutorService scheduledExecutorService;
     private int  mViewPagerTotalNum = 0;
@@ -88,13 +88,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mView = mInflater.inflate(R.layout.list_viewpage,null);
         mView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.listview_header_height)));
         titles = new String[]{
-                "这是第一张",
-                "这是第二张",
-                "这是第三张",
-                "这是第四张",
-                "这是第五张",
+                "这是第一个字串",
+                "这是第二个字串",
+                "这是第三个字串",
+                "这是第四个字串",
+                "这是第五个字串",
         };
-        //用来显示的图片
         for(int i = 0; i < ImageOperation.fileNameList.size(); i++){
             mViewPagerTotalNum = i;
             ImageView imageView = new ImageView(getApplicationContext());
@@ -311,7 +310,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     };
     
     private void applyRotation(int position, float start, float end, View first,View second,View content){  
-        // 计算中心点  
+        // 锟斤拷锟斤拷锟斤拷锟侥碉拷  
         final float centerX = content.getWidth() / 2.0f;  
         final float centerY = content.getHeight() / 2.0f;  
     
@@ -320,7 +319,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         rotation.setDuration(500);  
         rotation.setFillAfter(true);  
         rotation.setInterpolator(new AccelerateInterpolator());  
-        //设置监听  
+        //锟斤拷锟矫硷拷锟斤拷  
         rotation.setAnimationListener(new DisplayNextView(position,first,second,content));  
         content.startAnimation(rotation);  
         } 
@@ -339,7 +338,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
            public void onAnimationStart(Animation animation) {  
                
            }  
-           //动画结束  
+           //锟斤拷锟斤拷锟斤拷锟斤拷  
            public void onAnimationEnd(Animation animation) {  
                mapview.post(new SwapViews(mPosition,mFirst,mSecond,mContent));  
            }  
@@ -366,14 +365,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
            TranslationAnimation rotation;  
              
            if (mPosition > -1) {  
-               //显示ImageView  
+               //锟斤拷示ImageView  
         	   mapstatus = true;
                mFirst.setVisibility(View.VISIBLE);  
                mSecond.setVisibility(View.GONE);  
                mFirst.requestFocus();  
                rotation = new TranslationAnimation(-90, 0, centerX, centerY, 310.0f, false);  
            } else {  
-               //返回listview  
+               //锟斤拷锟斤拷listview  
         	   mapstatus = false;
                mFirst.setVisibility(View.VISIBLE);  
                mSecond.setVisibility(View.GONE);  
@@ -385,7 +384,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
            rotation.setDuration(500);  
            rotation.setFillAfter(true);  
            rotation.setInterpolator(new DecelerateInterpolator());  
-           //开始动画  
+           //锟斤拷始锟斤拷锟斤拷  
            mContent.startAnimation(rotation);  
        } 
   }
